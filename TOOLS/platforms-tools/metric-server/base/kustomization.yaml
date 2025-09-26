@@ -4,11 +4,13 @@ kind: Kustomization
 resources:
   - application.yaml
 
-# Common labels applied to all resources
-commonLabels:
-  app.kubernetes.io/name: metrics-server
-  app.kubernetes.io/component: platform-tool
-  app.kubernetes.io/part-of: platform-tools
-  managed-by: argocd
+# Modern labels syntax instead of deprecated commonLabels
+labels:
+  - pairs:
+      app.kubernetes.io/name: metrics-server
+      app.kubernetes.io/component: platform-tool
+      app.kubernetes.io/part-of: platform-tools
+      managed-by: argocd
+    includeSelectors: false
 
 # Base configuration that overlays can inherit and modify
