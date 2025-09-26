@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - kyverno
   - external-secrets
-  - linkderd
+  - linkerd
   - metric-server
   - prometheus-stack
   - kubecost

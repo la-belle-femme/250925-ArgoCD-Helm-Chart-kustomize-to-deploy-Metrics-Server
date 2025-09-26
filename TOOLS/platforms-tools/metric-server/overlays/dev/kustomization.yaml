@@ -8,11 +8,16 @@ resources:
 # Environment-specific name suffix
 nameSuffix: -dev
 
-# Environment-specific patches
-patchesStrategicMerge:
-  - application-patch.yaml
+# Environment-specific patches (modern syntax)
+patches:
+  - target:
+      kind: Application
+      name: metrics-server
+    path: application-patch.yaml
 
-# Environment-specific labels
-commonLabels:
-  environment: dev
-  deployment-branch: develop
+# Environment-specific labels (modern syntax)
+labels:
+  - pairs:
+      environment: dev
+      deployment-branch: develop
+    includeSelectors: false

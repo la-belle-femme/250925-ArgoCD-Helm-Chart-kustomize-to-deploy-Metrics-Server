@@ -3,12 +3,16 @@ kind: Application
 metadata:
   name: metrics-server
 spec:
-  # Development environment configuration
   source:
     helm:
       values: |
-        # Development-specific overrides
-        replicas: 1  # Single replica for dev
+        # Development-specific overrides with base configuration
+        args:
+          - --kubelet-insecure-tls
+          - --kubelet-preferred-address-types=InternalIP
+
+        # Single replica for dev
+        replicas: 1
         
         # Minimal resources for development
         resources:
@@ -18,20 +22,34 @@ spec:
           limits:
             cpu: 100m
             memory: 256Mi
-        
+
+        # Keep base security settings
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+
         # No node selector for dev (can run anywhere)
         nodeSelector: {}
         
         # No pod disruption budget needed for dev
         podDisruptionBudget:
           enabled: false
+
+        # Keep monitoring integration
+        serviceMonitor:
+          enabled: true
+          namespace: monitoring
         
         # Dev-specific monitoring labels
         podLabels:
           environment: dev
           cost-center: development
-  
-  # Auto-sync for development
+
   syncPolicy:
     automated:
       prune: true
